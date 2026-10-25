@@ -1,0 +1,29 @@
+# Local environments and Python/build caches
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Local investigations, downloaded targets and generated benchmark evidence
+results/
+.tools/
+.causescope/
+benchmarks/**/evidence/
+
+# Credentials and unpublished research
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.key
+*.pem
+*.p12
+*.pfx
+.private-evaluation/
+participant-responses/

@@ -1,0 +1,23 @@
+version: 1
+name: Genuine historical Black 26.5.1 defect from upstream fix 5272
+scope: local
+command: ["{python}", "{spec_dir}/adapter.py", "--release", "26.5.1", "--allow-local-execution"]
+parameters:
+  BLACK_LINE_LENGTH:
+    baseline: "120"
+    values: ["40"]
+  BLACK_SKIP_COMMA:
+    baseline: "false"
+    values: ["true"]
+failure:
+  exit_code: 123
+  stderr_contains: "not equivalent"
+invalid_exit_codes: [70]
+settings:
+  strategy: adaptive
+  seed: 17
+  repetitions: 3
+  timeout_seconds: 15
+  max_configurations: 16
+  max_runs: 60
+  max_seconds: 60

@@ -1,0 +1,25 @@
+version: 1
+name: Git 2.45.2 LF safety rejection (intended guard, not a Git defect)
+scope: local
+command: ["{python}", "{spec_dir}/adapter.py", "--allow-local-execution"]
+parameters:
+  GIT_CONFIG_VALUE_0: # core.autocrlf
+    baseline: "false"
+    values: ["true"]
+  GIT_CONFIG_VALUE_1: # core.safecrlf
+    baseline: "false"
+    values: ["true"]
+  GIT_CONFIG_VALUE_2: # core.quotePath (distractor)
+    baseline: "true"
+    values: ["false"]
+  GIT_CONFIG_VALUE_3: # core.trustctime (distractor)
+    baseline: "true"
+    values: ["false"]
+failure:
+  exit_code: 128
+  stderr_contains: "fatal: LF would be replaced by CRLF in fixture.txt"
+settings:
+  repetitions: 3
+  timeout_seconds: 10
+  max_configurations: 64
+  max_output_bytes: 65536

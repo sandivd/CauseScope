@@ -1,0 +1,3 @@
+# Normalize source while preserving the exact checksum-pinned fixture bytes.
+* text=auto
+benchmarks/developer_workflow/coverage_case/fixture.py -text

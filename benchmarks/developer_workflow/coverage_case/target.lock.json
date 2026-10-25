@@ -1,0 +1,10 @@
+{
+  "version": "7.16.2",
+  "filename": "coverage-7.16.2-cp310-cp310-win_amd64.whl",
+  "url": "https://files.pythonhosted.org/packages/07/86/31f1f3170571a345ab9d8361a7b2f8e0c5698173fbecd1f7149b6e2089ee/coverage-7.16.2-cp310-cp310-win_amd64.whl",
+  "sha256": "c3305c38a2fa21a4254f2ace7dd9ef5fc569c9a558b66e7017650b3d637fb95e",
+  "code_sha256": "cac7492707ed00163198c9622ecea2f00edb73192f2f313c44bda0a4353b6ddf",
+  "fixture_sha256": "5b8e4e6dde9b4728f05fee71ca4d4ec57e9540adc6084d4e4aff4c817eea0681",
+  "platform": "Windows AMD64 CPython 3.10",
+  "source": "https://coverage.readthedocs.io/en/7.16.2/branch.html"
+}

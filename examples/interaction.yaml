@@ -1,0 +1,18 @@
+version: 1
+name: Two-option interaction bug
+scope: local
+command: ["{python}", "-m", "causescope.sample_app"]
+parameters:
+  CAUSESCOPE_CACHE:
+    baseline: "off"
+    values: ["on"]
+  CAUSESCOPE_FAST:
+    baseline: "off"
+    values: ["on"]
+failure:
+  exit_code: 23
+  stderr_contains: "interaction bug"
+settings:
+  timeout_seconds: 3
+  repetitions: 3
+  max_configurations: 32

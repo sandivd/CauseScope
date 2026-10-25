@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "causescope"
+version = "0.1.0a0"
+description = "A local black-box configuration experiment engine"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["configuration", "debugging", "experiments", "mcp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
+]
+dependencies = ["PyYAML>=6.0,<7", "allpairspy==2.5.1"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pytest-cov>=5,<8", "build>=1,<2", "setuptools>=77", "twine>=6,<7"]
+mcp = ["mcp==2.3.0"]
+
+[project.scripts]
+causescope = "causescope.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["integration: explicitly opted-in experiments against checksum-pinned external applications"]

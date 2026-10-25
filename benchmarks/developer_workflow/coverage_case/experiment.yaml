@@ -1,0 +1,21 @@
+version: 1
+name: Coverage.py 7.16.2 branch coverage threshold (intended guard, not a defect)
+scope: local
+command: ["{python}", "{spec_dir}/adapter.py", "--allow-local-execution"]
+parameters:
+  COVERAGE_BRANCH:
+    baseline: "false"
+    values: ["true"]
+  COVERAGE_THRESHOLD:
+    baseline: "0"
+    values: ["90"]
+failure:
+  exit_code: 2
+  stdout_contains: "Coverage failure"
+invalid_exit_codes: [70]
+settings:
+  repetitions: 3
+  timeout_seconds: 15
+  max_configurations: 16
+  max_runs: 60
+  max_seconds: 60

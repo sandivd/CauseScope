@@ -1,0 +1,85 @@
+name: Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev,mcp]"
+      - run: python -m pytest --cov=causescope --cov-report=term-missing
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install ".[dev]"
+      - run: python -m build --no-isolation
+      - run: python -m twine check dist/*
+      - run: python tools/publication_audit.py --source --sdist dist/causescope-0.1.0a0.tar.gz --wheel dist/causescope-0.1.0a0-py3-none-any.whl
+      - name: Install and exercise the wheel in a clean environment
+        run: |
+          python -m venv .venv-smoke
+          .venv-smoke/bin/python -m pip install dist/causescope-0.1.0a0-py3-none-any.whl
+          .venv-smoke/bin/python -m pip check
+          .venv-smoke/bin/python -m causescope validate examples/interaction.yaml
+          .venv-smoke/bin/python -m causescope run examples/interaction.yaml --allow-local-execution --output results/wheel-smoke
+          .venv-smoke/bin/python -c "import json; r=json.load(open('results/wheel-smoke/evidence.json')); assert r['status']=='failure_found' and r['diagnosis']['confirmed'] and r['diagnosis']['one_minimal'] and r['search']['subprocess_runs']==18"
+  git-integration:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev]"
+      - shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File .\benchmarks\git_eol\setup.ps1
+      - run: python -m pytest tests/integration/test_git_eol.py -q --tb=short
+        env:
+          CAUSESCOPE_RUN_GIT_INTEGRATION: '1'
+  black-historical-integration:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m benchmarks.black_regression.setup --allow-download
+      - run: python -m pytest tests/integration/test_black_regression.py -q --tb=short
+        env:
+          CAUSESCOPE_RUN_BLACK_INTEGRATION: '1'
+  coverage-workflow-integration:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev,mcp]"
+      - run: python -m benchmarks.developer_workflow.coverage_case.setup --allow-download
+      - run: python -m pytest tests/integration/test_coverage_workflow.py -q --tb=short
+        env:
+          CAUSESCOPE_RUN_COVERAGE_INTEGRATION: '1'
